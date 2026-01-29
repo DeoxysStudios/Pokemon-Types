@@ -1,4 +1,4 @@
-{
+TYPECHART = {
     "normal": {
         "_id": 0,
         "weakness": [ "fighting" ],
