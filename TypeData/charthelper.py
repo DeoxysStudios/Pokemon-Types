@@ -81,3 +81,24 @@ class TypeCombo:
         if atkPokemon.teraType and atkPokemon.type1 != atkPokemon.teraType:
             return max(maxMultiplier, 1.5 * self.damageFromMove(atkPokemon.teraType))
         return maxMultiplier
+    
+    def matchup(self, opponent: "TypeCombo") -> int:
+        """
+        Determines if this Pokemon has a winning, losing,
+        or neutral type matchup against the opponent Pokemon.
+
+        Args:
+            opponent (TypeCombo): The type of the opponent's Pokemon.
+
+        Returns:
+            int: 1 if this Pokemon has the type advantage against
+            the opponent, -1 if the opponent has the type advantage,
+            and 0 if it's a neutral matchup.
+        """
+        damageDealt = opponent.damageFromPokemon(self)
+        damageTaken = self.damageFromPokemon(opponent)
+        if damageDealt > damageTaken: return 1
+        if damageDealt < damageTaken: return -1
+        return 0
+    
+    
