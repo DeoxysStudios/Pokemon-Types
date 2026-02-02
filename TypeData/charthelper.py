@@ -1,6 +1,6 @@
-from typechart import TYPECHART
+from TypeData.typechart import TYPECHART
 
-TYPES = TYPECHART.keys()
+TYPES = set(TYPECHART.keys())
 
 class ChartHelper:
     
@@ -22,6 +22,26 @@ class ChartHelper:
         if atkType in TYPECHART[defType]["resistance"]: return 0.5
         if atkType in TYPECHART[defType]["immunity"]: return 0.0
         return 1.0
+    
+    @staticmethod
+    def getAllTypeCombos() -> set["TypeCombo"]:
+        """
+        Returns a set of all 171  possible
+        type combinations (that aren't terastalized).
+
+        Returns:
+            set[TypeCombo]: The set of all 171 type combinations.
+        """
+        allTypes: set[str] = set()
+        for type1 in TYPES:
+            allTypes.add(TypeCombo(type1))
+            for type2 in TYPES:
+                if TYPECHART[type2]["_id"] > TYPECHART[type1]["_id"]:
+                    allTypes.add(TypeCombo(type1, type2))
+        return allTypes
+            
+            
+            
 
 class TypeCombo:
     """
@@ -37,7 +57,7 @@ class TypeCombo:
     
     def __init__(self, type1: str, type2: str | None = None, teraType: str | None = None):
         self.type1 = type1
-        self.type2 = type2
+        self.type2 = type2 if type2 != type1 else None
         self.teraType = teraType
         
     def damageFromMove(self, atkType: str) -> float:
@@ -100,5 +120,21 @@ class TypeCombo:
         if damageDealt > damageTaken: return 1
         if damageDealt < damageTaken: return -1
         return 0
+    
+    def __hash__(self):
+        id1: int
+        id2: int
+        id3: int = 0
+        if self.type2:
+            id1 = min(TYPECHART[self.type1]["_id"], TYPECHART[self.type2]["_id"])
+            id2 = max(TYPECHART[self.type1]["_id"], TYPECHART[self.type2]["_id"])
+        else:
+            id1 = id2 = TYPECHART[self.type1]["_id"]
+        if self.teraType: id3 = TYPECHART[self.teraType]["_id"] + 1
+        return id1 + 18 * id2 + 324 * id3
+    
+    def __eq__(self, value):
+        return type(value) == TypeCombo and self.__hash__() == value.__hash__()
+        
     
     
