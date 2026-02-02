@@ -64,10 +64,7 @@ class TypeCombo:
         """
         Prints the typing of this Pokemon.
         """
-        output: str = self.type1
-        if self.type2: output += f", {self.type2}"
-        if self.teraType: output += f" (tera {self.teraType})"
-        print(output)
+        print(str(self))
 
         
     def damageFromMove(self, atkType: str) -> float:
@@ -145,6 +142,12 @@ class TypeCombo:
     
     def __eq__(self, value):
         return type(value) == TypeCombo and self.__hash__() == value.__hash__()
+    
+    def __str__(self) -> str:
+        output: str = self.type1
+        if self.type2: output += f", {self.type2}"
+        if self.teraType: output += f" (tera {self.teraType})"
+        return output
         
     
     
