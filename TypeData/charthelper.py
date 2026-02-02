@@ -60,6 +60,16 @@ class TypeCombo:
         self.type2 = type2 if type2 != type1 else None
         self.teraType = teraType
         
+    def printType(self) -> None:
+        """
+        Prints the typing of this Pokemon.
+        """
+        output: str = self.type1
+        if self.type2: output += f", {self.type2}"
+        if self.teraType: output += f" (tera {self.teraType})"
+        print(output)
+
+        
     def damageFromMove(self, atkType: str) -> float:
         """
         The damage a Pokemon with this type combo
